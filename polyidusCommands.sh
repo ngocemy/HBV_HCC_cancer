@@ -1,0 +1,2 @@
+bowtie2 -p 1 --local -x human_hbv_cancer/input/fa/bt2_hbv/hbv -1 human_hbv_cancer/tmp/hic_merge/PLC_1_hic.end1.fq.gz -2 human_hbv_cancer/tmp/hic_merge/PLC_1_hic.end2.fq.gz | samtools sort -o human_hbv_cancer/output/polyidus/PLC_1_hic/viral/virusAligned-temp.bam -
+samtools view -bS -f 4 -F 264 human_hbv_cancer/output/polyidus/PLC_1_hic/viral/virusAligned-temp.bam -o human_hbv_cancer/output/polyidus/PLC_1_hic/viral/pair1mapped.bam

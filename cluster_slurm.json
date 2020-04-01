@@ -1,0 +1,27 @@
+{
+    "__default__" :
+    {
+        "queue"  : "normal",
+        "ncpus"  : 16,
+        "mem" : 32000,
+        "ntasks": 1,
+        "time": 359,
+        "name"   : "variation_3d.{rule}.{wildcards}",
+        "output" : "logs/cluster/{rule}.{wildcards}.out",
+        "error"  : "logs/cluster/{rule}.{wildcards}.err"
+    },
+    "split_iter_align_hic":
+    {
+        "mem": 8000,
+        "ncpus": 4,
+        "time": 119,
+        "queue": "fast"
+    },
+    "combine_units":
+    {
+        "mem": 2000,
+        "ncpus": 1,
+        "time": 119,
+        "queue": "fast"
+    }
+}

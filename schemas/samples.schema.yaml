@@ -1,0 +1,13 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+
+description: an entry in the sample sheet
+properties:
+  sample:
+    type        : string
+    description : unique sample identified
+  cell_type:
+    type        : string
+    description : cellular type of the library
+  condition:
+    type        : string
+    description : affection status of the sample. Either control for absence of viral integration, or integration for sapmles with integrated virus

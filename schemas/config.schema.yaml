@@ -1,0 +1,62 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+
+description: The config file contains general parameters for the snakemake pipeline
+
+type: object
+
+properties:
+  samples:
+    type            : string
+    description     : Samples metadata file
+  units:
+    type            : string
+    description     : Sequencing units metadata file
+  reference:
+    properties:
+      human:
+        type            : string
+        description     : Path to the reference genome of human used in the analysis
+      hbv:
+        type            : string
+        description     : Path to the reference genome of HBV virus used in the analysis
+
+  remote:
+    properties:
+      provider:
+        type        : string
+        description : Provider serving input files remotely
+      bucket:
+        type        : string
+        description : Name of the cloud bucket containing file or absolute path to prepend to SFTP paths
+      host:
+        type        : string
+        description : Name of the host serving input files if using SFTP/SSHas a provider
+      username:
+        type        : string
+        description : Username for SFTP/SSH authentication
+      ssh_key:
+        type        : string
+        description : Path to the private ssh key for SFTP/SSH remote file access
+      password:
+        type        : string
+        description : Password used for SFTP/SSH authentication
+
+  contact_maps:
+    properties:
+      max_res:
+        type        : number
+        description : Maximum resolution used in Hi-C contact maps
+      comp_res:
+        type        : number
+        description : Resolution used in Hi-C contact maps for features such as A/B compartments
+  loops:
+    type            : object
+    properties:
+      dist_bins:
+        type        : array
+        description : Basepair values used for loop pileups ranges.
+  params:
+    type            : object
+    properties:
+      hicstuff:
+        type        : string

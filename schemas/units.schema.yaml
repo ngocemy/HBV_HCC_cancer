@@ -1,0 +1,33 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+
+description: row of the units file representing a sequencing unit, i.e. single or paired end read data
+type object
+properties:
+  sample:
+    type         : string
+    description  : unique sample identifier.
+  libtype:
+    type         : string
+    description  : type of experiment that generated the library.
+  replicate:
+    type         : int
+    description  : replicate id of the given library-libtype combination.
+  reseq:
+    type         : int
+    description  : resequencing of the same library.
+  batch:
+    type         : int
+    description  : experimental batch in which this library was generated.
+  fq1:
+    type         : string
+    description  : Path to the forward reads file.
+  fq2:
+    type         : string
+    description  : Path to the reverse reads file.
+required:
+    - sample
+    - libtype
+    - replicate
+    - reseq
+    - batch
+    - fq1

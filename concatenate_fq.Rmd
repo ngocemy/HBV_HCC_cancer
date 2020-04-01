@@ -1,0 +1,39 @@
+---
+title: "Concatenate_HBV_fq"
+output: html_notebook
+---
+
+Code for concatenate fq files for HBV project. The problem starts with how to merge samples with same libtype, replicate, end (fq1 or fq2) but merge ones with as technical replicates. Also, for all type of captures, double, triple, single capture, all are call 'captn' and are merged.
+
+```{r}
+library('tidyverse')
+units <- read_tsv('units.tsv',col_names = T)
+units
+```
+
+```{r}
+#units2 <- units %>% group_by(sample,libtype,replicate) %>% summarise_all(funs(paste(na.omit(.), collapse = ',')))
+#units2 <-      units2[-c(4,5)] %>% mutate(new_file = paste(sample,libtype,replicate,sep='_'))
+
+units2 <- units %>% group_by(sample,libtype,replicate) %>% summarise(fq1=list(fq1),fq2=list(fq2))
+units2 <- units2 %>% mutate(new_file = paste(sample,libtype,replicate,sep='_'))
+units2
+```
+
+```{r}
+write_delim(units2[-c(4,5)],path = 'listfile.txt')
+```
+
+```{r}
+for (i in 1:nrow(units2)){
+  print(units2[i,])
+  file_path_fq1 = units2[i,4]
+  file_path_fq2 = units2[i,5]
+  new_name1 = paste(units2[i,6],'fq1.txt',sep = '.')
+  new_name2 = paste(units2[i,6],'fq2.txt',sep = '.')
+  system("cat file_path_fq1 > new_name1")
+  system("cat file_path_fq2 > new_name2")
+}
+
+```
+

@@ -1,0 +1,36 @@
+
+samples       : "samples.tsv"
+units         : "units.tsv"
+
+reference: 
+  human       : "human_hbv_cancer/input/fa/bt2_hg19"
+  hbv         : "human_hbv_cancer/input/fa/bt2_hbv"
+
+remote:
+  provider    : ""
+  host        : "tars.pasteur.fr"
+  bucket      : "test_hbv_cancer"
+  username    : "cmatthey"
+  ssh_key     : "/home/cmatthey/.ssh/tars_rsa"
+  password    : ""
+
+contact_maps:
+  max_res   : 10000
+  comp_res  : 100000
+
+loops:
+  dist_bins :
+    - 100000
+    - 2000000
+    - 20000000
+
+params:
+  hicstuff_iteralign   : "--read-len 150 --aligner bowtie2"
+  bowtie2              : " --sensitive-local"
+
+containers:
+  bowtie2  : "docker://biocontainers/bowtie2:v2.3.4.3-1-deb_cv1"
+  samtools : "docker://biocontainers/samtools:v1.9-4-deb_cv1"
+  cooler   : "docker://cmdoret/cooler:0.8.5"
+  hicstuff : "docker://koszullab/hicstuff:latest"
+  chromosight : "docker://koszullab/chromosight:latest"
