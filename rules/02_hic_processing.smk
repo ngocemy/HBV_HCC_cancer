@@ -1,3 +1,4 @@
+!# usr/bin/env python3
 conda: "envs/hic_processing.yaml"
 rule bt2_index:
   input: GENOME
@@ -208,4 +209,11 @@ rule insulation_score:
       tail -n +2 |
       awk -vOFS="\t" '{{print $1,$2,$3,$5}}' > {output}
     """
-
+# 04: Extracting read names of human-virus contacts
+# those reads are not necessary to be chimeric, but based on 3D contacts human-virus
+rule hetero_reads:
+    input: join(TMP,'pairs', '{sample}_{libtype}.pairs')
+    output: join(TMP, 'hetero_reads_{sample}_{libtype}.txt')
+    threads: 4
+    script:
+        "extract_hetero_reads.py"

@@ -146,7 +146,8 @@ rule all:
     # join(OUT, 'plots', 'compartments', 'compartments_pca.pdf'),
     # expand(join(OUT, 'plots', 'compartments', 'eigens', '{chrom}_eigen.pdf'), chrom=[f"chr{i}" for i in range(1, 23)] + ['chrX'])
     # #expand(join(OUT, 'hint', '{sample}'), sample=dual_libs)
-    expand(join(OUT,'polyidus','{sample}_hic'),sample=hic_libs) 
+#    expand(join(OUT,'polyidus','{sample}_hic'),sample=hic_libs) 
+	expand(join(TMP, 'hetero_reads_{sample}_{libtype}.txt'),sample=dual_libs,libtype=['captn','hic'])
 # Python helper functions
 include: "scripts/pairs_utils.py"
 include: "scripts/mat_utils.py"
