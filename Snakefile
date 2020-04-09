@@ -136,7 +136,8 @@ wildcard_constraints:
 
 # Final files to generate
 rule all:
-  input: expand(join(TMP, 'hetero_reads_{sample}_{libtype}.txt'),sample=dual_samples,libtype=['captn'])
+  input: join(OUT, 'insertions', 'insertions_{sample}.bed'), sample = captn_libs) 
+   #expand(join(TMP, 'hetero_reads_{sample}_{libtype}.txt'),sample=dual_samples,libtype=['captn'])
     # expand(join(OUT, 'all_signals_{sample}.bedgraph'), sample=dual_libs),
     # join(OUT, 'rnaseq', 'diff_expr', 'integration_vs_control.tsv'),
     # join(OUT, 'figures', 'loops.pdf'),
@@ -159,7 +160,7 @@ include: 'rules/02_hic_processing.smk'
 # include: 'rules/03_compartment_analysis.smk'
 # include: 'rules/04_loop_calling.smk'
 # include: 'rules/05_rna_seq.smk'
-#include: 'rules/06_insertion_analysis.smk'
+include: 'rules/06_insertion_analysis.smk'
 
 # 04:Combine signals at different resolutions into a single bedgraph
 rule aggregate_signals:
