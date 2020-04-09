@@ -96,7 +96,7 @@ def access_remote(local_path):
     return remote_path
 
 # Set input / output paths
-DATA_DIR = 'human_hbv_cancer'
+DATA_DIR = 'hbv_data'
 IN = join(DATA_DIR, 'input')
 OUT = join(DATA_DIR, 'output')
 TMP = join(DATA_DIR, 'tmp')
@@ -136,7 +136,7 @@ wildcard_constraints:
 
 # Final files to generate
 rule all:
-  input:
+  input: expand(join(TMP, 'hetero_reads_{sample}_{libtype}.txt'),sample=dual_samples,libtype=['captn'])
     # expand(join(OUT, 'all_signals_{sample}.bedgraph'), sample=dual_libs),
     # join(OUT, 'rnaseq', 'diff_expr', 'integration_vs_control.tsv'),
     # join(OUT, 'figures', 'loops.pdf'),
@@ -147,7 +147,7 @@ rule all:
     # expand(join(OUT, 'plots', 'compartments', 'eigens', '{chrom}_eigen.pdf'), chrom=[f"chr{i}" for i in range(1, 23)] + ['chrX'])
     # #expand(join(OUT, 'hint', '{sample}'), sample=dual_libs)
 #    expand(join(OUT,'polyidus','{sample}_hic'),sample=hic_libs) 
-	expand(join(TMP, 'hetero_reads_{sample}_{libtype}.txt'),sample=dual_libs,libtype=['captn','hic'])
+
 # Python helper functions
 include: "scripts/pairs_utils.py"
 include: "scripts/mat_utils.py"
@@ -155,11 +155,11 @@ include: "scripts/compartments_utils.py"
 
 # Pipeline sub-workflows
 include: 'rules/01_common.smk'
-# include: 'rules/02_hic_processing.smk'
+include: 'rules/02_hic_processing.smk'
 # include: 'rules/03_compartment_analysis.smk'
 # include: 'rules/04_loop_calling.smk'
 # include: 'rules/05_rna_seq.smk'
-include: 'rules/06_insertion_analysis.smk'
+#include: 'rules/06_insertion_analysis.smk'
 
 # 04:Combine signals at different resolutions into a single bedgraph
 rule aggregate_signals:
