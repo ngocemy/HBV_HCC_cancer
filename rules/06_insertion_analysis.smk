@@ -25,7 +25,7 @@ rule get_insertion_coords:
 	input: join(OUT, 'cov_virus_{sample}.bedgraph')
 	output: join(OUT, 'insertions', 'insertions_{sample}.bed')
 	params:
-		height_threshold = 200
+		height_threshold = 200,
 		distance_threshold = 1 # To get rid of the same integration event in 2 consecutive bins (1 bin= 10000 bp)
 	run:
 		from scipy.signal import find_peaks
@@ -39,12 +39,12 @@ rule get_insertion_coords:
 		for (i,chrom) in enumerate(np.unique(cov.chrom)):
 			print(i, chrom)
 			cov_sub = cov.loc[cov.chrom == chrom]
-		peaks_arr.append(find_peaks(cov_sub["virus"], height = params["height_threshold"], distance = params["distance_threshold"]))
-		print(peaks_arr[i][0])
-		cov_peak = cov_sub.iloc[peaks_arr[i][0],0:2]
+			peaks_arr.append(find_peaks(cov_sub["virus"], height = params["height_threshold"], distance = params["distance_threshold"]))
+			print(peaks_arr[i][0])
+			cov_peak = cov_sub.iloc[peaks_arr[i][0],0:3]
 ## Do not consider peaks on the virus itself
-		cov_peak = cov_peak.loc[~peaks_pos.chrom.str.contains("HBV"), :]
-		cov_peak.to_csv("test_bedgragh_to_bed.tsv",mode='a',sep="\t",header=None,index=False)
+			cov_peak = cov_peak.loc[~cov_peak.chrom.str.contains("HBV"), :]
+			cov_peak.to_csv(output[0], mode='a',sep="\t",header=None,index=False)
  
  
  ## Retrieve Hi-C windows and annotations around insertions
