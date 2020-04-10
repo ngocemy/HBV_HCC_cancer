@@ -124,7 +124,7 @@ dual_cells = samples.loc[np.isin(samples['sample'], dual_libs), 'cell_type'].res
 # Set constraints on wildcards based on data
 wildcard_constraints:
   cell_type="|".join(np.unique(samples.cell_type)),
-  sample="|".join(samples['sample']),
+  # sample="|".join(samples['sample']),
   libtype="|".join(np.unique(units.libtype)),
   # tissue="|".join(comp_lines)
 
@@ -135,9 +135,10 @@ wildcard_constraints:
 # =============================================================================
 
 # Final files to generate
-rule all:
-  input: join(OUT, 'insertions', 'insertions_{sample}.bed'), sample = captn_libs) 
-   #expand(join(TMP, 'hetero_reads_{sample}_{libtype}.txt'),sample=dual_samples,libtype=['captn'])
+
+rule all: 
+	input: expand(join(OUT, 'insertions', 'insertions_{sample}.bed'), sample = captn_libs) 
+    expand(join(TMP, 'hetero_reads_{sample}_{libtype}.txt'),sample=dual_samples,libtype=['captn'])
     # expand(join(OUT, 'all_signals_{sample}.bedgraph'), sample=dual_libs),
     # join(OUT, 'rnaseq', 'diff_expr', 'integration_vs_control.tsv'),
     # join(OUT, 'figures', 'loops.pdf'),
