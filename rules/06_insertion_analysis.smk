@@ -26,7 +26,7 @@ rule get_insertion_coords:
 	output: join(OUT, 'insertions', 'insertions_{sample}.bed')
 	params:
 		height_threshold = 200,
-		distance_threshold = 1 # To get rid of the same integration event in 2 consecutive bins (1 bin= 10000 bp)
+		distance_threshold = 1.5 # To get rid of the same integration event in 2 consecutive bins (1 bin= 10000 bp)
 	run:
 		from scipy.signal import find_peaks
 		cov = pd.read_csv(
