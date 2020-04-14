@@ -46,7 +46,18 @@ rule get_insertion_coords:
 			cov_peak = cov_peak.loc[~cov_peak.chrom.str.contains("HBV"), :]
 			cov_peak.to_csv(output[0], mode='a',sep="\t",header=None,index=False)
  
- 
+rule get_coverage_at_bp:
+	input: 
+		bam =join(TMP, "sorted", "{sample}_{libtype}.end1.bam.sorted") 
+		bed= join(OUT, 'insertions', 'insertions_{sample}.bed')
+		hetero = join(TMP, 'hetero_reads_{sample}_{libtype}.txt')
+	output: join(OUT, 'insertions', 'insertions_at_bp_{sample}_{libtype}.txt')
+	message: "using get_coverage_at bp at {wildcards.sample}"
+	script: "../scripts/max_coverage_bp.py"
+		
+
+
+
  ## Retrieve Hi-C windows and annotations around insertions
  #rule get_insertion_regions:
  #    input: join(OUT, 'insertions', 'insertions_{sample}.bed')

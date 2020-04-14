@@ -139,9 +139,10 @@ wildcard_constraints:
 rule all:
 	input:
 		expand(join(OUT, 'insertions', 'insertions_{sample}.bed'), sample = captn_libs), 
-		expand(join(TMP, 'hetero_reads_{sample}_{libtype}.txt'),sample=dual_samples,libtype=['captn'])
-   
-   # expand(join(OUT, 'all_signals_{sample}.bedgraph'), sample=dual_libs),
+		expand(join(TMP, 'hetero_reads_{sample}_{libtype}.txt'),sample=dual_samples,libtype=['captn']),
+		expand(join(OUT, 'insertions', 'insertions_at_bp_{sample}_{libtype}.txt'), sample = captn_libs,libtype=['captn'])
+    
+	# expand(join(OUT, 'all_signals_{sample}.bedgraph'), sample=dual_libs),
     # join(OUT, 'rnaseq', 'diff_expr', 'integration_vs_control.tsv'),
     # join(OUT, 'figures', 'loops.pdf'),
     # join(OUT, 'figures', 'loop_stats.pdf'),
