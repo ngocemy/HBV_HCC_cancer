@@ -1,7 +1,10 @@
+import matplotlib as mpl
+mpl.use("Agg")
 import pysam as ps
 import pandas as pd
 import numpy as np
 import pdb
+import matplotlib.pyplot as plt
 bamfile = ps.AlignmentFile(snakemake.input["bam"], "rb")
 
 hetero_reads = set(open(snakemake.input["hetero"]).read().split('\n'))
@@ -18,7 +21,8 @@ with open(snakemake.output[0],"w") as bedout:
         site_inte = np.argmax(cov_array)
         if i < 10:
             plt.plot(cov_array)
-            plt.savefig("{read} array.png")
+            plt.scatter(site_inte, cov_array[site_inte])
+            plt.savefig(f"test_{i}_array.png")
         else:
             system.exit(0)
         bedout.write(''.join([line["chr"],"\t", str(line["start"] +site_inte),"\n"])) 
