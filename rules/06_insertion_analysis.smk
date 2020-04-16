@@ -48,8 +48,8 @@ rule get_insertion_coords:
  
 rule get_coverage_at_bp:
 	input: 
-		bams =[ join(TMP, "sort", "{sample}_{libtype}_1.end1.bam.sorted"),
-				join(TMP, "sort", "{sample}_{libtype}_1.end2.bam.sorted")],
+		bams =[ join(TMP, "sorted", "{sample}_{libtype}_1.end1.bam.sorted"),
+				join(TMP, "sorted", "{sample}_{libtype}_1.end2.bam.sorted")],
 		bed= join(OUT, 'insertions', 'insertions_{sample}.bed'),
 		hetero = join(TMP, 'hetero_reads_{sample}_{libtype}.txt')
 	output: 
