@@ -20,6 +20,7 @@ with open(snakemake.output[0],"w") as bedout:
                 cov_array[ref_arr_mapped - line["start"]] += 1
         site_inte = np.argmax(cov_array)
         if i < 10:
+            plt.figure()
             plt.plot(cov_array)
             plt.scatter(site_inte, cov_array[site_inte])
             plt.savefig(f"test_{i}_array.png")
