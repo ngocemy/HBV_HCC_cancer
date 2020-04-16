@@ -7,17 +7,18 @@ def extract_hetero_reads(pair,out):
     
     Parameters
     ----------
-    pair: pair file has been extracted.
+    pair: Gzip pair file has NOT been extracted.
     out: output file with read names, eg. hetero_read.tsv
     @author: ngocusth
     """
     
-    for fpair in pd.read_csv(pair,sep='\t',comment='#',encoding='utf-8',header=None, chunksize=100000):
+    for fpair in pd.read_csv(pair,sep='\t',compression="gzip",comment='#',encoding='utf-8',header=None, chunksize=100000):
     
+        fpair = fpair.reset_index(drop=True)
         #Initiate array of 0
         # Column 2,4 are chromosomes
-        col2=np.zeros(fpair.shape[0])
-        col4=np.zeros(fpair.shape[0])
+        col2=np.zeros(fpair.shape[0],dtype=bool)
+        col4=np.zeros(fpair.shape[0],dtype=bool)
     
         col4[fpair.index[fpair.iloc[:,3] == "HBVayw"]] = 1
     
@@ -29,10 +30,9 @@ def extract_hetero_reads(pair,out):
         read_het = fpair.iloc[het_col]
     
         try:
-            read_het=read_het.iloc[:,0]   
-            read_het.to_csv(out, mode='a', sep='\t')
+            read_het=read_het.loc[:,0]   
+            read_het.to_csv(out, mode='a', sep='\t',header=False,index=False)
         except IndexingError:
             pass
-extract_hetero_reads('hbv_data/tmp/pairs/PLC_1_captn.pairs.sorted','hetero_read.tsv')
 
-#extract_hetero_reads(snakemake.input[0],snakemake.output[0])
+extract_hetero_reads(snakemake.input[0],snakemake.output[0])

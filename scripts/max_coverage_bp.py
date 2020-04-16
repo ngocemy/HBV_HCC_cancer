@@ -37,6 +37,5 @@ with open(snakemake.output["txt_out"],"w") as bedout:
     for ax in axs:
         ax.label_outer() 
         ax.set(ylabel='Number of reads mapped per bp')
-    fig.subtiltle(f"Coverage of integration events in regions of 10KB: {snakemake.wildcards['sample']}")
+    fig.suptitle(f"Coverage of integration events in regions of 10KB: {snakemake.wildcards['sample']}")
     plt.savefig(snakemake.output["svg"])
-bedout.close()
