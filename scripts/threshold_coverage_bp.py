@@ -14,7 +14,7 @@ bed = pd.read_csv(snakemake.input["bed"],sep="\t",header=None,names=["chr","star
 # Give output as file with integration sites and count, plot coverage for those regions 
 with open(snakemake.output["txt_out"],"w") as bedout:
     plt.figure()
-    fig, axs = plt.subplots(bed.shape[0])
+    fig, axs = plt.subplots(bed.shape[0],sharey=True)
     i = 0
     for index,line in bed.iterrows():
         cov_array = np.zeros(10000)
@@ -24,19 +24,20 @@ with open(snakemake.output["txt_out"],"w") as bedout:
                     ref_arr_mapped = np.array(read.get_reference_positions()) # Give an array of positions in reference genome with alignment
                     ref_arr_mapped = ref_arr_mapped[ref_arr_mapped < (line["start"] + 10000)]
                     cov_array[ref_arr_mapped - line["start"]] += 1
-        site_inte = np.argmax(cov_array)
-        value_max = np.amax(cov_array)
-        bedout.write(''.join([line["chr"],"\t", str(line["start"] +site_inte),"\t",str(value_max),"\n"])) 
+        site_inte_arr = np.where(cov_array > 50)[0]
+        for index_site in site_inte_arr:
+            bedout.write(''.join([line["chr"],"\t", str(line["start"] + index_site),"\t",str(cov_array[index_site]),"\n"])) 
+            axs[i].scatter(index_site, cov_array[index_site],s=8, c="red")
         #Plot cov_array to see noise for each region - i:
 
         axs[i].plot(cov_array)
-        axs[i].scatter(site_inte, cov_array[site_inte])
-        axs[i].set_title(f"{line['chr']}: {line['start']} - {line['end']}")
+        axs[i].set_title( f"{line['chr']}: {line['start']} - {line['end']}",fontdict={"fontsize" : 8, "fontweight" : "medium"})
         i+=1
    # Hide x labels and tick labels for all but bottom plot.
     for ax in axs:
         ax.label_outer() 
-        ax.set(ylabel='Number of reads mapped per bp')
-    fig.subtiltle(f"Coverage of integration events in regions of 10KB: {snakemake.wildcards['sample']}")
+        ax.set_ylabel('Number of reads mapped per bp',fontsize=8)
+    #fig.set_constrained_layout_pads(pad=10)
+    plt.tight_layout(rect=(0, 0, 1, 0.95))
+    fig.suptitle(f"Coverage of integration events in regions of 10KB: {snakemake.wildcards['sample']}")
     plt.savefig(snakemake.output["svg"])
-bedout.close()

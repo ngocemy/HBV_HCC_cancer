@@ -1,5 +1,5 @@
 #!/bin/env snakemake -s
-
+conda: "env/hic_processing.yaml"
 polyidus_path = 'polyidus/src/polyidus.py'
 
 #rule run_polyidus:
@@ -48,12 +48,15 @@ rule get_insertion_coords:
  
 rule get_coverage_at_bp:
 	input: 
-		bam =join(TMP, "sorted", "{sample}_{libtype}.end1.bam.sorted") 
-		bed= join(OUT, 'insertions', 'insertions_{sample}.bed')
+		bams =[ join(TMP, "sort", "{sample}_{libtype}_1.end1.bam.sorted"),
+				join(TMP, "sort", "{sample}_{libtype}_1.end2.bam.sorted")],
+		bed= join(OUT, 'insertions', 'insertions_{sample}.bed'),
 		hetero = join(TMP, 'hetero_reads_{sample}_{libtype}.txt')
-	output: join(OUT, 'insertions', 'insertions_at_bp_{sample}_{libtype}.txt')
+	output: 
+		txt_out = join(OUT, 'insertions', "insertion_at_bp",'insertions_at_bp_{sample}_{libtype}.txt'),
+		svg = join(OUT, "insertions", "figure",'{sample}_{libtype}_coverage_integration.svg')
 	message: "using get_coverage_at bp at {wildcards.sample}"
-	script: "../scripts/max_coverage_bp.py"
+	script: "../scripts/threshold_coverage_bp.py"
 		
 
 
