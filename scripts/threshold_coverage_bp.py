@@ -25,7 +25,7 @@ with open(snakemake.output["txt_out"],"w") as bedout:
                     ref_arr_mapped = np.array(read.get_reference_positions()) # Give an array of positions in reference genome with alignment
                     ref_arr_mapped = ref_arr_mapped[ref_arr_mapped < (line["start"] + 10000)]
                     cov_array[ref_arr_mapped - line["start"]] += 1
-        site_inte_arr = sig.find_peaks(cov_array, height=20, distance=2)[0]
+        site_inte_arr = sig.find_peaks(cov_array, height=50, distance=2)[0]
         for index_site in site_inte_arr:
             bedout.write(''.join([line["chr"],"\t", str(line["start"] + index_site),"\t",str(cov_array[index_site]),"\n"])) 
             axs[i].scatter(index_site, cov_array[index_site],s=8, c="red")
