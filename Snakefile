@@ -43,6 +43,8 @@ def bp_to_suffix(size):
     input_len_pow = int(np.log10(size))
     # Find which power matches order of magnitude
     valid_pow_idx = max(0, np.searchsorted(sorted_pows, input_len_pow, side='right') - 1)
+	#searchsorted option right returns index i so that a[i-1] <= v < a[i], e.g if input_len_pow = 6, it returns 3, 
+	# if input_len_show = 5, it returns 2 (note i - 1); then minus 1 to exclude the inserted v into the array to get real index
     input_valid_pow = sorted_pows[valid_pow_idx]
     # Get corresponding suffix
     suffix = pow_to_suffix[input_valid_pow]
