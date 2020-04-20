@@ -2,6 +2,7 @@
 # This file can be run using snakemake. It runs all different HBV cancer 
 # analyses on the input pairs files
 # cmdoret, 20190501
+# ngocusth, 20200420
 
 #from snakemake.utils import validate
 from os.path import join
