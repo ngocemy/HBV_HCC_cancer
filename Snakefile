@@ -52,6 +52,9 @@ def bp_to_suffix(size):
     str_bp = f"{int(size // scale)}{suffix}"
     return str_bp
 
+
+# This is not used anymore, as it also downloads data into a temporary folder, so it will take memory 
+# Now using SLURM: connect to TARS, run slurm sbatch or srun
 ## Function to build remote path to input / output files
 def access_remote(local_path):
     """
