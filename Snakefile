@@ -2,6 +2,7 @@
 # This file can be run using snakemake. It runs all different HBV cancer 
 # analyses on the input pairs files
 # cmdoret, 20190501
+# ngocusth, 20200420
 
 #from snakemake.utils import validate
 from os.path import join
@@ -42,6 +43,8 @@ def bp_to_suffix(size):
     input_len_pow = int(np.log10(size))
     # Find which power matches order of magnitude
     valid_pow_idx = max(0, np.searchsorted(sorted_pows, input_len_pow, side='right') - 1)
+	#searchsorted option right returns index i so that a[i-1] <= v < a[i], e.g if input_len_pow = 6, it returns 3, 
+	# if input_len_show = 5, it returns 2 (note i - 1); then minus 1 to exclude the inserted v into the array to get real index
     input_valid_pow = sorted_pows[valid_pow_idx]
     # Get corresponding suffix
     suffix = pow_to_suffix[input_valid_pow]
@@ -49,6 +52,9 @@ def bp_to_suffix(size):
     str_bp = f"{int(size // scale)}{suffix}"
     return str_bp
 
+
+# This is not used anymore, as it also downloads data into a temporary folder, so it will take memory 
+# Now using SLURM: connect to TARS, run slurm sbatch or srun
 ## Function to build remote path to input / output files
 def access_remote(local_path):
     """
@@ -96,7 +102,7 @@ def access_remote(local_path):
     return remote_path
 
 # Set input / output paths
-DATA_DIR = 'human_hbv_cancer'
+DATA_DIR = 'hbv_data'
 IN = join(DATA_DIR, 'input')
 OUT = join(DATA_DIR, 'output')
 TMP = join(DATA_DIR, 'tmp')
@@ -124,7 +130,7 @@ dual_cells = samples.loc[np.isin(samples['sample'], dual_libs), 'cell_type'].res
 # Set constraints on wildcards based on data
 wildcard_constraints:
   cell_type="|".join(np.unique(samples.cell_type)),
-  sample="|".join(samples['sample']),
+  # sample="|".join(samples['sample']),
   libtype="|".join(np.unique(units.libtype)),
   # tissue="|".join(comp_lines)
 
@@ -135,9 +141,15 @@ wildcard_constraints:
 # =============================================================================
 
 # Final files to generate
+
 rule all:
-  input:
-    # expand(join(OUT, 'all_signals_{sample}.bedgraph'), sample=dual_libs),
+	input:
+		#expand(join(OUT, 'insertions', 'insertions_{sample}.bed'), sample = captn_libs), 
+		#expand(join(TMP, 'hetero_reads_{sample}_{libtype}.txt'),sample=dual_samples,libtype=['captn']),
+		expand(join(OUT, 'insertions','insertion_at_bp', 'insertions_at_bp_{sample}_{libtype}.txt'), sample =captn_libs,libtype=['captn']),
+		expand(join(OUT,'insertions','figure','{sample}_{libtype}_coverage_integration.svg'),sample=captn_libs,libtype=['captn'])
+    
+	# expand(join(OUT, 'all_signals_{sample}.bedgraph'), sample=dual_libs),
     # join(OUT, 'rnaseq', 'diff_expr', 'integration_vs_control.tsv'),
     # join(OUT, 'figures', 'loops.pdf'),
     # join(OUT, 'figures', 'loop_stats.pdf'),
@@ -147,7 +159,7 @@ rule all:
     # expand(join(OUT, 'plots', 'compartments', 'eigens', '{chrom}_eigen.pdf'), chrom=[f"chr{i}" for i in range(1, 23)] + ['chrX'])
     # #expand(join(OUT, 'hint', '{sample}'), sample=dual_libs)
 #    expand(join(OUT,'polyidus','{sample}_hic'),sample=hic_libs) 
-	expand(join(TMP, 'hetero_reads_{sample}_{libtype}.txt'),sample=dual_libs,libtype=['captn','hic'])
+
 # Python helper functions
 include: "scripts/pairs_utils.py"
 include: "scripts/mat_utils.py"
@@ -155,7 +167,7 @@ include: "scripts/compartments_utils.py"
 
 # Pipeline sub-workflows
 include: 'rules/01_common.smk'
-# include: 'rules/02_hic_processing.smk'
+include: 'rules/02_hic_processing.smk'
 # include: 'rules/03_compartment_analysis.smk'
 # include: 'rules/04_loop_calling.smk'
 # include: 'rules/05_rna_seq.smk'

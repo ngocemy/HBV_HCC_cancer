@@ -9,7 +9,6 @@ reference:
 remote:
   provider    : ""
   host        : "tars.pasteur.fr"
-  bucket      : "test_hbv_cancer"
   username    : "cmatthey"
   ssh_key     : "/home/cmatthey/.ssh/tars_rsa"
   password    : ""
