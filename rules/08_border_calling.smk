@@ -19,7 +19,7 @@ rule merge_matrices:
 
 # Perform border detection on the merged matrices
 # chromosight version: 
-rule loop_calling:
+rule border_calling:
     input: 
         cool = join(OUT, 'cool', 'all_merged.cool')
     output:
