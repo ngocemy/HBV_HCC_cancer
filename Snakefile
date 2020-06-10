@@ -128,7 +128,17 @@ wildcard_constraints:
   libtype="|".join(np.unique(units.libtype)),
   # tissue="|".join(comp_lines)
 
-
+# Tuning threshold for find_peak:
+thres_dict = {'HCC36_1': 520.8,
+ 'TONG_1': 765.4,
+ 'HA59T_1': 108,
+ 'LI21_1': 1766.7,
+ 'HEPARG_1': 108,
+ 'PLC_1': 377.4,
+ 'SNU387_1': 108,
+ 'FOCUS_1': 940.2,
+ 'HEP3B_1': 224.9,
+ 'SNU354_1': 108} 
 
 
 ### ANALYSIS
@@ -138,11 +148,11 @@ wildcard_constraints:
 
 rule all:
 	input:
-		#expand(join(OUT, 'insertions', 'insertions_{sample}.bed'), sample = captn_libs), 
+		expand(join(OUT, 'insertions', 'insertions_{sample}.bed'), sample = captn_libs), 
 		#expand(join(TMP, 'hetero_reads_{sample}_{libtype}.txt'),sample=dual_samples,libtype=['captn']),
-		expand(join(OUT, 'insertions','insertion_at_bp', 'insertions_at_bp_{sample}_{libtype}.txt'), sample =captn_libs,libtype=['captn']),
-		expand(join(OUT,'insertions','figure','{sample}_{libtype}_coverage_integration.svg'),sample=captn_libs,libtype=['captn'])
-    
+		expand(join(OUT, 'insertions','insertion_at_bp', 'insertions_at_bp_{sample}_{libtype}.txt'), sample =samples["sample"],libtype=['captn']),
+		#expand(join(OUT,'insertions','figure','{sample}_{libtype}_coverage_integration.svg'),sample=samples["sample"],libtype=['captn']),
+		#expand(join(TMP, 'gat', '{sample}_{libtype}_gat.bed'),sample=samples["sample"],libtype=["captn"])   
 	# expand(join(OUT, 'all_signals_{sample}.bedgraph'), sample=dual_libs),
     # join(OUT, 'rnaseq', 'diff_expr', 'integration_vs_control.tsv'),
     # join(OUT, 'figures', 'loops.pdf'),
@@ -155,13 +165,13 @@ rule all:
 #    expand(join(OUT,'polyidus','{sample}_hic'),sample=hic_libs) 
 
 # Python helper functions
-include: "scripts/pairs_utils.py"
-include: "scripts/mat_utils.py"
-include: "scripts/compartments_utils.py"
+#include: "scripts/pairs_utils.py"
+#include: "scripts/mat_utils.py"
+#include: "scripts/compartments_utils.py"
 
 # Pipeline sub-workflows
-include: 'rules/01_common.smk'
-include: 'rules/02_hic_processing.smk'
+#include: 'rules/01_common.smk'
+#include: 'rules/02_hic_processing.smk'
 # include: 'rules/03_compartment_analysis.smk'
 # include: 'rules/04_loop_calling.smk'
 # include: 'rules/05_rna_seq.smk'
