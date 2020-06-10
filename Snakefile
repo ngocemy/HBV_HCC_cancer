@@ -2,6 +2,7 @@
 # This file can be run using snakemake. It runs all different HBV cancer 
 # analyses on the input pairs files
 # cmdoret, 20190501
+# ngocusth, 20200420
 
 #from snakemake.utils import validate
 from os.path import join
@@ -42,6 +43,8 @@ def bp_to_suffix(size):
     input_len_pow = int(np.log10(size))
     # Find which power matches order of magnitude
     valid_pow_idx = max(0, np.searchsorted(sorted_pows, input_len_pow, side='right') - 1)
+	#searchsorted option right returns index i so that a[i-1] <= v < a[i], e.g if input_len_pow = 6, it returns 3, 
+	# if input_len_show = 5, it returns 2 (note i - 1); then minus 1 to exclude the inserted v into the array to get real index
     input_valid_pow = sorted_pows[valid_pow_idx]
     # Get corresponding suffix
     suffix = pow_to_suffix[input_valid_pow]
@@ -49,6 +52,9 @@ def bp_to_suffix(size):
     str_bp = f"{int(size // scale)}{suffix}"
     return str_bp
 
+
+# This is not used anymore, as it also downloads data into a temporary folder, so it will take memory 
+# Now using SLURM: connect to TARS, run slurm sbatch or srun
 ## Function to build remote path to input / output files
 def access_remote(local_path):
     """
