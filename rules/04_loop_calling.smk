@@ -157,3 +157,11 @@ rule plot_loop_stats:
     output: join(OUT, 'figures', 'loop_stats.pdf')
     shell: "touch {output}"
         
+rule analyze_chromosight:
+    input: 
+        cool_file = join(OUT,'cool','{sample}.cool'),
+        loops = join(OUT,'loop',,'{sample}','loops_out.txt'),
+        borders = join(OUT,'gibcus2018','detect','{sample_gibcus}','borders_out.txt')
+    output: join(OUT,'chromosight_plot', '{sample}_chr3.svg')
+    script:
+        "../scripts/chromosight_plot.py"
